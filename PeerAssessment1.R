@@ -5,6 +5,7 @@ dat$date <- as.Date(dat$date, format = "%Y-%m-%d")
 library(plyr)
 library(dplyr)
 library(ggplot2)
+library(lattice)
 
 ##What is mean total number of steps taken per day?
 ##Find out total number of steps per day
@@ -75,7 +76,6 @@ filldat$day <- as.factor(ifelse(filldat$day == "Saturday" | filldat$day == "Sund
 
 
 ##Panel plot
-library(lattice)
 avedat <- aggregate(filldat$steps, list(filldat$interval,filldat$day), mean)
 colnames(avedat) <- c("Interval", "Day", "Average_Steps")
 xyplot(avedat$Average_Steps ~ avedat$Interval | avedat$Day, type = "l", layout = c(1,2), main = "Average Number of Steps Across All Weekday Days and Weekend Days", ylab = "Average Number of Steps", xlab = "Interval")

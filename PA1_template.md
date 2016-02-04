@@ -10,10 +10,11 @@ dat$date <- as.Date(dat$date, format = "%Y-%m-%d")
 library(plyr)
 library(dplyr)
 library(ggplot2)
+library(lattice)
 ```
 
 ## What is mean total number of steps taken per day?
-1. Calculate the total number of steps taken per day
+- Calculate the total number of steps taken per day
 
 ```r
 ##Find out total number of steps per day
@@ -31,7 +32,7 @@ as.numeric(todat$Total_Steps)
 ## [56] 11834 11162 13646 10183  7047    NA
 ```
 
-2. Make a histogram of the total number of steps taken each day
+- Make a histogram of the total number of steps taken each day
 
 ```r
 ##Plot histogram
@@ -40,7 +41,7 @@ hist(todat$Total_Steps, breaks = 20, ylab = "Frequency", xlab = "Total Steps", m
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
 
-3. Calculate and report the mean and median of the total number of steps taken per day
+- Calculate and report the mean and median of the total number of steps taken per day
 
 ```r
 ##Mean total number of steps taken per day
@@ -61,7 +62,7 @@ median(todat$Total_Steps, na.rm = TRUE)
 ```
 
 ## What is the average daily activity pattern?
-1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+- Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 ```r
 newdat <- na.omit(dat)
@@ -73,7 +74,7 @@ ggplot(intdat, aes(interval, ave)) + geom_line() + labs(title = "Average Number 
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)
 
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+- Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```r
 ##5-minute interval that contains the maximum number of steps
@@ -85,8 +86,8 @@ intdat[intdat$ave == max(intdat$ave),]
 ## 104      835 206.1698
 ```
 
-## Imputing missing values
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+## Inputing missing values
+- Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 ```r
 ##Total number of rows with NAs
@@ -97,11 +98,11 @@ sum(is.na(dat))
 ## [1] 2304
 ```
 
-2. Devise a strategy for filling in all of the missing values in the dataset
+- Devise a strategy for filling in all of the missing values in the dataset
 
 The strategy I devised is to use the mean for the 5-min interval to fill in the missing values.
 
-3. Create a new dataset that is equal to the original dataset but with the missing data filled in
+- Create a new dataset that is equal to the original dataset but with the missing data filled in
 
 ```r
 ##Use mean of 5-minute interval to fill missing data
@@ -120,7 +121,7 @@ sum(is.na(filldat))
 ## [1] 0
 ```
 
-4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
+- Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
 
 ```r
 ##Plot new histogram
@@ -169,7 +170,7 @@ median(newtodat$Total_Steps)
 There is no difference in the mean but there is a difference of 1.19 in the median. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day
+- Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day
 
 ```r
 ##Create a new factor variable with two levels - "weekday" and "weekend"
@@ -177,11 +178,10 @@ filldat$day <- weekdays(filldat$date)
 filldat$day <- as.factor(ifelse(filldat$day == "Saturday" | filldat$day == "Sunday", "Weekend", "Weekday"))
 ```
 
-2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis)
+- Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis)
 
 ```r
 ##Create a panel plot
-library(lattice)
 avedat <- aggregate(filldat$steps, list(filldat$interval,filldat$day), mean)
 colnames(avedat) <- c("Interval", "Day", "Average_Steps")
 xyplot(avedat$Average_Steps ~ avedat$Interval | avedat$Day, type = "l", layout = c(1,2), main = "Average Number of Steps Across All Weekday Days and Weekend Days", ylab = "Average Number of Steps", xlab = "Interval")
